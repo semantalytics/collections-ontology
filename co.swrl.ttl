@@ -1,0 +1,112 @@
+@prefix rule: <tag:stardog:api:rule:> .
+
+[]
+  a rule:SPARQLRule ;
+  rule:content """
+    PREFIX co: <http://purl.org/co/>
+    PREFIX swrlb: <http://www.w3.org/2003/11/swrlb#>
+      IF {
+
+		?l co:itemOf ?li1 .
+		?li1 co:index ?r1 .
+		?l co:itemOf ?li2 .
+		?li2 co:index ?r2 .
+		FILTER(?r2 = ?r1 + 1)
+          }
+      THEN {
+	?li1 co:nextItem ?li2
+          }""" .
+
+
+#[] a rule:SPARQLRule ;
+#  rule:content """
+#    PREFIX co: <http://purl.org/co/>
+#      IF {
+#	?current co:nextItem ?next .
+#        ?current co:index ?r .
+#        BIND(?r + 1 AS ?nextR)
+#      }
+#      THEN {
+#	?next co:index ?nextR .
+#          }""" .
+
+
+#[] a rule:SPARQLRule ;
+#  rule:content """
+#
+#    PREFIX co: <http://purl.org/co/>
+#
+#    IF {
+#      ?x co:precededBy ?x .
+#    }
+#    THEN {
+#      ?x :hasError "A list item cannot be preceded by itself" .
+#    }""" .
+
+
+[]
+    a rule:SPARQLRule ;
+    rule:content """
+
+        PREFIX co: <http://purl.org/co/>
+      
+        IF {
+		?l co:lastItem ?i ;
+		   co:size ?value .
+        }
+        THEN {
+		?i co:index ?value .
+        }""" .
+
+
+[] a rule:SPARQLRule ;
+  rule:content """
+
+    PREFIX co: <http://purl.org/co/>
+
+      IF {
+	?i co:itemOf ?l .
+	?l co:size ?value .
+	?i co:index ?value .
+          }
+      THEN {
+	?i co:lastItem ?l .
+          }""" .
+
+
+#[] a rule:SPARQLRule ;
+#  rule:content """
+#
+#    PREFIX co: <http://purl.org/co/>
+#    PREFIX error: <http://www.essepuntato.it/2009/10/error/>
+#
+#      IF {
+#	?x co:followedBy ?x .
+#          }
+#      THEN {
+#	?x error:hasError "A list item cannot be followed by itself" .
+#          }""" .
+
+
+[] a rule:SPARQLRule ;
+  rule:content """
+    PREFIX co: <http://purl.org/co/>
+      IF {
+	?list co:lastItem ?last .
+        ?last co:index ?r .
+          }
+      THEN {
+	?list co:size ?r .
+          }""" .
+
+
+[] a rule:SPARQLRule ;
+  rule:content """
+    PREFIX co: <http://purl.org/co/>
+      IF {
+	?li co:index 1 ;
+	    co:itemOf ?l .
+          }
+      THEN {
+	?l co:firstItem ?li .
+          }""" .

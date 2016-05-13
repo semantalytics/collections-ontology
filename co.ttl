@@ -1,0 +1,354 @@
+@prefix :  <http://purl.org/co/> .
+@prefix dc:  <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl:  <http://www.w3.org/2003/11/swrl#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix error:  <http://www.essepuntato.it/2009/10/error/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix swrlb:  <http://www.w3.org/2003/11/swrlb#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://purl.org/co>  rdf:type  owl:Ontology ;
+        owl:versionInfo  "2.0" ;
+        dc:date          "March 19, 2012" ;
+        dc:contributor   "Marco Ocana" ;
+        dc:contributor   "Paolo Ciccarese" ;
+        dc:contributor   "Silvio Peroni" ;
+        dc:format        "application/rdf+xml" ;
+        dc:language      "en" ;
+        dc:title         "The Collections Ontology\n(CO)"@en ;
+        dc:creator       <http://www.paolociccarese.info> ;
+        owl:imports      <http://www.essepuntato.it/2009/10/error> .
+
+dc:creator  rdf:type  owl:AnnotationProperty .
+
+dc:publisher  rdf:type  owl:AnnotationProperty .
+
+dc:contributor  rdf:type  owl:AnnotationProperty .
+
+dc:language  rdf:type  owl:AnnotationProperty .
+
+dc:date  rdf:type  owl:AnnotationProperty .
+
+dc:description  rdf:type  owl:AnnotationProperty .
+
+dc:format  rdf:type  owl:AnnotationProperty .
+
+dc:title  rdf:type  owl:AnnotationProperty .
+
+:element  rdf:type              owl:ObjectProperty ;
+        rdfs:label              "has element"@en ;
+        rdfs:comment            "The link to the members of a collection"@en ;
+        rdfs:domain             :Collection ;
+        owl:propertyChainAxiom  _:b0 .
+
+_:b0    rdf:first  :item ;
+        rdf:rest   _:b1 .
+
+_:b1    rdf:first  :itemContent ;
+        rdf:rest   rdf:nil .
+
+:elementOf  rdf:type   owl:ObjectProperty ;
+        rdfs:label     "is element of"@en ;
+        rdfs:comment   "The link to a collection in which the object is member."@en ;
+        owl:inverseOf  :element .
+
+:firstItem  rdf:type        owl:ObjectProperty ;
+        rdf:type            owl:FunctionalProperty ;
+        rdfs:label          "has first item"@en ;
+        rdfs:comment        "The link to the first item of the list."@en ;
+        rdfs:domain         :List ;
+        rdfs:subPropertyOf  :item .
+
+_:b2    rdf:type  owl:Class .
+
+:firstItem  rdfs:range  _:b2 .
+
+_:b2    owl:intersectionOf  _:b3 .
+
+_:b3    rdf:first  :ListItem .
+
+_:b4    rdf:type  owl:Restriction .
+
+_:b3    rdf:rest  _:b5 .
+
+_:b5    rdf:first  _:b4 .
+
+#_:b4    owl:onProperty   :previousItem ;
+#        owl:cardinality  "0"^^xsd:nonNegativeInteger .
+
+_:b6    rdf:type  owl:Restriction .
+
+_:b5    rdf:rest  _:b7 .
+
+_:b7    rdf:first  _:b6 .
+
+_:b6    owl:onProperty  :index ;
+        owl:hasValue    "1"^^xsd:positiveInteger .
+
+_:b7    rdf:rest  rdf:nil .
+
+:firstItemOf  rdf:type      owl:ObjectProperty ;
+        rdfs:label          "is first item of"@en ;
+        rdfs:comment        "The link to a list in which the item is first item."@en ;
+        owl:inverseOf       :firstItem ;
+        rdfs:subPropertyOf  :itemOf .
+
+:followedBy  rdf:type   owl:ObjectProperty ;
+        rdf:type        owl:TransitiveProperty ;
+        rdfs:label      "is followed by"@en ;
+        dc:description  "Given the list (I[1], I[2], ... , I[i-1], I[i], I[i+1], ... , I[n-1], I[n]), the item I[i] is followed by I[i+1], ... , I[n-1] and I[n]."@en ;
+        rdfs:comment    "The link to the following item in a list."@en ;
+        rdfs:domain     :ListItem ;
+        rdfs:range      :ListItem .
+
+:item   rdf:type                owl:ObjectProperty ;
+        rdfs:label              "has item"@en ;
+        rdfs:comment            "The link to every item of the bag"@en ;
+        rdfs:domain             :Bag ;
+        rdfs:range              :Item ;
+        owl:propertyChainAxiom  _:b8 .
+
+_:b8    rdf:first  :item ;
+        rdf:rest   _:b9 .
+
+_:b9    rdf:first  :nextItem ;
+        rdf:rest   rdf:nil .
+
+:itemContent  rdf:type  owl:ObjectProperty ;
+        rdf:type      owl:FunctionalProperty ;
+        rdfs:label    "has item content"@en ;
+        rdfs:comment  "The link to the actual resource to which the item refers."@en ;
+        rdfs:domain   :Item .
+
+_:b10   rdf:type  owl:Class .
+
+:itemContent  rdfs:range  _:b10 .
+
+_:b10   owl:complementOf  :Item .
+
+:itemContentOf  rdf:type  owl:ObjectProperty ;
+        rdfs:label     "is item content of"@en ;
+        rdfs:comment   "The link to the item that refers to the resource."@en ;
+        owl:inverseOf  :itemContent .
+
+:itemOf  rdf:type      owl:ObjectProperty ;
+        rdfs:label     "is item of"@en ;
+        rdfs:comment   "The link to a bag in which the item is member."@en ;
+        owl:inverseOf  :item .
+
+:lastItem  rdf:type         owl:ObjectProperty ;
+        rdf:type            owl:FunctionalProperty ;
+        rdfs:label          "has last item"@en ;
+        rdfs:comment        "The link to the last item of the list."@en ;
+        rdfs:domain         :List ;
+        rdfs:subPropertyOf  :item .
+
+_:b11   rdf:type  owl:Class .
+
+:lastItem  rdfs:range  _:b11 .
+
+_:b11   owl:intersectionOf  _:b12 .
+
+_:b12   rdf:first  :ListItem .
+
+_:b13   rdf:type  owl:Restriction .
+
+_:b12   rdf:rest  _:b14 .
+
+_:b14   rdf:first  _:b13 .
+
+#_:b13   owl:onProperty   :nextItem ;
+#        owl:cardinality  "0"^^xsd:nonNegativeInteger .
+
+_:b14   rdf:rest  rdf:nil .
+
+:lastItemOf  rdf:type       owl:ObjectProperty ;
+        rdfs:label          "is last item of"@en ;
+        rdfs:comment        "The link to a list in which the item is last item."@en ;
+        rdfs:subPropertyOf  :itemOf ;
+        owl:inverseOf       :lastItem .
+
+:nextItem  rdf:type         owl:ObjectProperty ;
+        rdf:type            owl:FunctionalProperty ;
+        rdfs:label          "has next item"@en ;
+        dc:description      "Given the list (I[1], I[2], ... , I[i-1], I[i], I[i+1], ... , I[n-1], I[n]), the next item of I[i] is I[i+1]."@en ;
+        rdfs:comment        "The link to the next item in a list."@en ;
+        rdfs:subPropertyOf  :followedBy .
+
+:precededBy  rdf:type   owl:ObjectProperty ;
+        rdf:type        owl:TransitiveProperty ;
+        rdfs:label      "is preceded by"@en ;
+        dc:description  "Given the list (I[1], I[2], ... , I[i-1], I[i], I[i+1], ... , I[n-1], I[n]), the item I[i] is preceded by I[i-1], ... , I[2] and I[1]."@en ;
+        rdfs:comment    "The link to the preceding item in a list."@en ;
+        owl:inverseOf   :followedBy .
+
+:previousItem  rdf:type     owl:ObjectProperty ;
+        rdf:type            owl:FunctionalProperty ;
+        rdfs:label          "has previous item"@en ;
+        dc:description      "Given the list (I[1], I[2], ... , I[i-1], I[i], I[i+1], ... , I[n-1], I[n]), the previous item of I[i] is I[i-1]."@en ;
+        rdfs:comment        "The link to the previous item in a list."@en ;
+        owl:inverseOf       :nextItem ;
+        rdfs:subPropertyOf  :precededBy .
+
+error:hasError  rdf:type  owl:DatatypeProperty .
+
+:index  rdf:type      owl:DatatypeProperty ;
+        rdfs:label    "has index"@en ;
+        rdfs:comment  "A number identifying the position, starting from 1, of a particular list item within a list."@en ;
+        rdfs:domain   :ListItem ;
+        rdfs:range    xsd:positiveInteger .
+
+:size   rdf:type        owl:DatatypeProperty ;
+        rdfs:label      "has size"@en ;
+        dc:description  "CO defines the size of a collection as the sum of the number of times entities that are part of the collection appear in it. This means that co:size considers how much each entity is involved by a particular collection, i.e.:\n- the size of the set {a, b, c} is three\n- the size of the bag [a, a, b, b, b, c] is five\n- the size of the list (a, b, c, b, a, b, c, c) is seven"@en ;
+        rdfs:comment    "The number of item belonging to a collection."@en ;
+        rdfs:domain     :Collection ;
+        rdfs:range      xsd:nonNegativeInteger .
+
+:Bag    rdf:type          owl:Class ;
+        rdfs:label        "bag"@en ;
+        rdfs:subClassOf   :Collection ;
+        owl:disjointWith  :Set ;
+        rdfs:comment      "Collection that can have a number of copies of each object"@en .
+
+:Collection  rdf:type    owl:Class ;
+        rdfs:label       "collection"@en ;
+        rdfs:subClassOf  owl:Thing .
+
+_:b15   rdf:type  owl:Restriction .
+
+:Collection  rdfs:subClassOf  _:b15 .
+
+_:b15   owl:onProperty     :element ;
+        owl:allValuesFrom  owl:Thing .
+
+_:b16   rdf:type  owl:Restriction .
+
+:Collection  rdfs:subClassOf  _:b16 .
+
+#_:b16   owl:onProperty   :size ;
+#        owl:cardinality  "1"^^xsd:nonNegativeInteger .
+
+:Collection  owl:disjointWith  :Item ;
+        rdfs:comment      "A group of objects that can be considered as a whole."@en .
+
+:Item   rdf:type         owl:Class ;
+        rdfs:label       "item"@en ;
+        rdfs:subClassOf  owl:Thing .
+
+_:b17   rdf:type  owl:Restriction .
+
+:Item   rdfs:subClassOf  _:b17 .
+
+_:b17   owl:onProperty  _:b18 .
+
+_:b18   owl:inverseOf  :item .
+
+_:b17   owl:someValuesFrom  :Bag .
+
+:Item   rdfs:comment  "Element belonging to a bag"@en .
+
+:List   rdf:type    owl:Class ;
+        rdfs:label  "list"@en .
+
+_:b19   rdf:type  owl:Restriction .
+
+:List   rdfs:subClassOf  _:b19 .
+
+_:b19   owl:onProperty      :lastItem ;
+        owl:maxCardinality  "1"^^xsd:nonNegativeInteger .
+
+_:b20   rdf:type  owl:Restriction .
+
+:List   rdfs:subClassOf  _:b20 .
+
+_:b20   owl:onProperty      :firstItem ;
+        owl:maxCardinality  "1"^^xsd:nonNegativeInteger .
+
+_:b21   rdf:type  owl:Class .
+
+:List   rdfs:subClassOf  _:b21 .
+
+_:b21   owl:intersectionOf  _:b22 .
+
+_:b22   rdf:first  :Bag .
+
+_:b23   rdf:type  owl:Restriction .
+
+_:b22   rdf:rest  _:b24 .
+
+_:b24   rdf:first  _:b23 .
+
+_:b23   owl:onProperty     :item ;
+        owl:allValuesFrom  :ListItem .
+
+_:b24   rdf:rest  rdf:nil .
+
+:List   rdfs:comment  "An ordered array of items, that can be present in multiple copies"@en .
+
+:ListItem  rdf:type      owl:Class ;
+        rdfs:label       "list item"@en ;
+        rdfs:subClassOf  :Item .
+
+_:b25   rdf:type  owl:Restriction .
+
+:ListItem  rdfs:subClassOf  _:b25 .
+
+#_:b25   owl:onProperty   :index ;
+#        owl:cardinality  "1"^^xsd:nonNegativeInteger .
+
+:ListItem  rdfs:comment  "element belonging to a list"@en .
+
+:Set    rdf:type         owl:Class ;
+        rdfs:label       "set"@en ;
+        rdfs:subClassOf  :Collection ;
+        rdfs:comment     "A collection that cannot contain duplicate elements."@en .
+
+owl:Thing  rdf:type  owl:Class .
+
+_:b26   rdf:type  owl:Class .
+
+_:b27   rdf:type  owl:Class .
+
+_:b26   rdfs:subClassOf  _:b27 .
+
+_:b27   owl:intersectionOf  _:b28 .
+
+_:b28   rdf:first  :List .
+
+_:b29   rdf:type  owl:Restriction .
+
+_:b28   rdf:rest  _:b30 .
+
+_:b30   rdf:first  _:b29 .
+
+_:b29   owl:onProperty      :firstItem ;
+        owl:someValuesFrom  :Item .
+
+_:b31   rdf:type  owl:Restriction .
+
+_:b30   rdf:rest  _:b32 .
+
+_:b32   rdf:first  _:b31 .
+
+_:b31   owl:onProperty      :lastItem ;
+        owl:someValuesFrom  :Item .
+
+_:b32   rdf:rest  rdf:nil .
+
+_:b26   owl:intersectionOf  _:b33 .
+
+_:b33   rdf:first  :List .
+
+_:b34   rdf:type  owl:Restriction .
+
+_:b33   rdf:rest  _:b35 .
+
+_:b35   rdf:first  _:b34 .
+
+_:b34   owl:onProperty      :item ;
+        owl:someValuesFrom  :ListItem .
+
+_:b35   rdf:rest  rdf:nil .

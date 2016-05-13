@@ -1,0 +1,33 @@
+@prefix rule: <tag:stardog:api:rule:> .
+
+
+
+#[] a rule:SPARQLRule ;
+#  rule:content """
+#
+#    PREFIX co: <http://purl.org/co/>
+#
+#    IF {
+#      ?x co:precededBy ?x .
+#    }
+#    THEN {
+#      ?x :hasError "A list item cannot be preceded by itself" .
+#    }""" .
+
+
+
+
+#[] a rule:SPARQLRule ;
+#  rule:content """
+#
+#    PREFIX co: <http://purl.org/co/>
+#    PREFIX error: <http://www.essepuntato.it/2009/10/error/>
+#
+#      IF {
+#	?x co:followedBy ?x .
+#          }
+#      THEN {
+#	?x error:hasError "A list item cannot be followed by itself" .
+#          }""" .
+
+

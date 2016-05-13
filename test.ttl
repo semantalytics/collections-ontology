@@ -1,0 +1,349 @@
+@prefix : <http://api.stardog.com/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix stardog: <tag:stardog:api:> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://purl.org/co> a owl:Ontology ;
+	owl:versionInfo "2.0" ;
+	<http://purl.org/dc/elements/1.1/date> "March 19, 2012" ;
+	<http://purl.org/dc/elements/1.1/contributor> "Marco Ocana" , "Paolo Ciccarese" , "Silvio Peroni" ;
+	<http://purl.org/dc/elements/1.1/format> "application/rdf+xml" ;
+	<http://purl.org/dc/elements/1.1/language> "en" ;
+	<http://purl.org/dc/elements/1.1/title> """The Collections Ontology
+(CO)"""@en ;
+	<http://purl.org/dc/elements/1.1/creator> <http://www.paolociccarese.info> ;
+	owl:imports <http://www.essepuntato.it/2009/10/error> .
+
+<http://purl.org/dc/elements/1.1/date> a owl:AnnotationProperty .
+
+<http://purl.org/dc/elements/1.1/contributor> a owl:AnnotationProperty .
+
+<http://purl.org/dc/elements/1.1/format> a owl:AnnotationProperty .
+
+<http://purl.org/dc/elements/1.1/language> a owl:AnnotationProperty .
+
+<http://purl.org/dc/elements/1.1/title> a owl:AnnotationProperty .
+
+<http://purl.org/dc/elements/1.1/creator> a owl:AnnotationProperty .
+
+<http://purl.org/dc/elements/1.1/publisher> a owl:AnnotationProperty .
+
+<http://purl.org/dc/elements/1.1/description> a owl:AnnotationProperty .
+
+<http://purl.org/co/element> a owl:ObjectProperty ;
+	rdfs:label "has element"@en ;
+	rdfs:comment "The link to the members of a collection"@en ;
+	rdfs:domain <http://purl.org/co/Collection> ;
+	owl:propertyChainAxiom _:b0 .
+
+<http://purl.org/co/Collection> a owl:Class ;
+	rdfs:label "collection"@en ;
+	rdfs:comment "A group of objects that can be considered as a whole."@en ;
+	rdfs:subClassOf owl:Thing , _:b15 , _:b16 ;
+	owl:disjointWith <http://purl.org/co/Item> .
+
+<http://purl.org/co/item> a owl:ObjectProperty ;
+	rdfs:label "has item"@en ;
+	rdfs:comment "The link to every item of the bag"@en ;
+	rdfs:domain <http://purl.org/co/Bag> ;
+	owl:propertyChainAxiom _:b8 ;
+	rdfs:range <http://purl.org/co/Item> .
+
+<http://purl.org/co/itemContent> a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "has item content"@en ;
+	rdfs:comment "The link to the actual resource to which the item refers."@en ;
+	rdfs:domain <http://purl.org/co/Item> ;
+	rdfs:range _:b10 .
+
+<http://purl.org/co/elementOf> a owl:ObjectProperty ;
+	rdfs:label "is element of"@en ;
+	rdfs:comment "The link to a collection in which the object is member."@en ;
+	owl:inverseOf <http://purl.org/co/element> .
+
+<http://purl.org/co/firstItem> a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "has first item"@en ;
+	rdfs:comment "The link to the first item of the list."@en ;
+	rdfs:domain <http://purl.org/co/List> ;
+	rdfs:subPropertyOf <http://purl.org/co/item> ;
+	rdfs:range _:b2 .
+
+<http://purl.org/co/List> a owl:Class ;
+	rdfs:label "list"@en ;
+	rdfs:comment "An ordered array of items, that can be present in multiple copies"@en ;
+	rdfs:subClassOf _:b19 , _:b20 , _:b21 .
+
+<http://purl.org/co/ListItem> a owl:Class ;
+	rdfs:label "list item"@en ;
+	rdfs:comment "element belonging to a list"@en ;
+	rdfs:subClassOf <http://purl.org/co/Item> , _:b25 .
+
+<http://purl.org/co/previousItem> a owl:ObjectProperty , owl:FunctionalProperty ;
+	<http://purl.org/dc/elements/1.1/description> "Given the list (I[1], I[2], ... , I[i-1], I[i], I[i+1], ... , I[n-1], I[n]), the previous item of I[i] is I[i-1]."@en ;
+	rdfs:label "has previous item"@en ;
+	rdfs:comment "The link to the previous item in a list."@en ;
+	owl:inverseOf <http://purl.org/co/nextItem> ;
+	rdfs:subPropertyOf <http://purl.org/co/precededBy> .
+
+<http://purl.org/co/index> a owl:DatatypeProperty ;
+	rdfs:label "has index"@en ;
+	rdfs:comment "A number identifying the position, starting from 1, of a particular list item within a list."@en ;
+	rdfs:domain <http://purl.org/co/ListItem> ;
+	rdfs:range xsd:positiveInteger .
+
+<http://purl.org/co/firstItemOf> a owl:ObjectProperty ;
+	rdfs:label "is first item of"@en ;
+	rdfs:comment "The link to a list in which the item is first item."@en ;
+	owl:inverseOf <http://purl.org/co/firstItem> ;
+	rdfs:subPropertyOf <http://purl.org/co/itemOf> .
+
+<http://purl.org/co/itemOf> a owl:ObjectProperty ;
+	rdfs:label "is item of"@en ;
+	rdfs:comment "The link to a bag in which the item is member."@en ;
+	owl:inverseOf <http://purl.org/co/item> .
+
+<http://purl.org/co/followedBy> a owl:ObjectProperty , owl:TransitiveProperty ;
+	<http://purl.org/dc/elements/1.1/description> "Given the list (I[1], I[2], ... , I[i-1], I[i], I[i+1], ... , I[n-1], I[n]), the item I[i] is followed by I[i+1], ... , I[n-1] and I[n]."@en ;
+	rdfs:label "is followed by"@en ;
+	rdfs:comment "The link to the following item in a list."@en ;
+	rdfs:domain <http://purl.org/co/ListItem> ;
+	rdfs:range <http://purl.org/co/ListItem> .
+
+<http://purl.org/co/Bag> a owl:Class ;
+	rdfs:label "bag"@en ;
+	rdfs:comment "Collection that can have a number of copies of each object"@en ;
+	rdfs:subClassOf <http://purl.org/co/Collection> ;
+	owl:disjointWith <http://purl.org/co/Set> .
+
+<http://purl.org/co/Item> a owl:Class ;
+	rdfs:label "item"@en ;
+	rdfs:comment "Element belonging to a bag"@en ;
+	rdfs:subClassOf owl:Thing , _:b17 .
+
+<http://purl.org/co/nextItem> a owl:ObjectProperty , owl:FunctionalProperty ;
+	<http://purl.org/dc/elements/1.1/description> "Given the list (I[1], I[2], ... , I[i-1], I[i], I[i+1], ... , I[n-1], I[n]), the next item of I[i] is I[i+1]."@en ;
+	rdfs:label "has next item"@en ;
+	rdfs:comment "The link to the next item in a list."@en ;
+	rdfs:subPropertyOf <http://purl.org/co/followedBy> .
+
+<http://purl.org/co/itemContentOf> a owl:ObjectProperty ;
+	rdfs:label "is item content of"@en ;
+	rdfs:comment "The link to the item that refers to the resource."@en ;
+	owl:inverseOf <http://purl.org/co/itemContent> .
+
+<http://purl.org/co/lastItem> a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:label "has last item"@en ;
+	rdfs:comment "The link to the last item of the list."@en ;
+	rdfs:domain <http://purl.org/co/List> ;
+	rdfs:subPropertyOf <http://purl.org/co/item> ;
+	rdfs:range _:b11 .
+
+<http://purl.org/co/lastItemOf> a owl:ObjectProperty ;
+	rdfs:label "is last item of"@en ;
+	rdfs:comment "The link to a list in which the item is last item."@en ;
+	owl:inverseOf <http://purl.org/co/lastItem> ;
+	rdfs:subPropertyOf <http://purl.org/co/itemOf> .
+
+<http://purl.org/co/precededBy> a owl:ObjectProperty , owl:TransitiveProperty ;
+	<http://purl.org/dc/elements/1.1/description> "Given the list (I[1], I[2], ... , I[i-1], I[i], I[i+1], ... , I[n-1], I[n]), the item I[i] is preceded by I[i-1], ... , I[2] and I[1]."@en ;
+	rdfs:label "is preceded by"@en ;
+	rdfs:comment "The link to the preceding item in a list."@en ;
+	owl:inverseOf <http://purl.org/co/followedBy> .
+
+<http://www.essepuntato.it/2009/10/error/hasError> a owl:DatatypeProperty .
+
+<http://purl.org/co/size> a owl:DatatypeProperty ;
+	<http://purl.org/dc/elements/1.1/description> """CO defines the size of a collection as the sum of the number of times entities that are part of the collection appear in it. This means that co:size considers how much each entity is involved by a particular collection, i.e.:
+- the size of the set {a, b, c} is three
+- the size of the bag [a, a, b, b, b, c] is five
+- the size of the list (a, b, c, b, a, b, c, c) is seven"""@en ;
+	rdfs:label "has size"@en ;
+	rdfs:comment "The number of item belonging to a collection."@en ;
+	rdfs:domain <http://purl.org/co/Collection> ;
+	rdfs:range xsd:nonNegativeInteger .
+
+<http://purl.org/co/Set> a owl:Class ;
+	rdfs:label "set"@en ;
+	rdfs:comment "A collection that cannot contain duplicate elements."@en ;
+	rdfs:subClassOf <http://purl.org/co/Collection> .
+
+owl:Thing a owl:Class .
+
+_:b0 rdf:first <http://purl.org/co/item> ;
+	rdf:rest _:b1 .
+
+_:b1 rdf:first <http://purl.org/co/itemContent> ;
+	rdf:rest rdf:nil .
+
+_:b2 a owl:Class ;
+	owl:intersectionOf _:b3 .
+
+_:b3 rdf:first <http://purl.org/co/ListItem> ;
+	rdf:rest _:b5 .
+
+_:b4 a owl:Restriction .
+
+_:b5 rdf:first _:b4 ;
+	rdf:rest _:b7 .
+
+_:b6 a owl:Restriction ;
+	owl:onProperty <http://purl.org/co/index> ;
+	owl:hasValue 1 .
+
+_:b7 rdf:first _:b6 ;
+	rdf:rest rdf:nil .
+
+_:b8 rdf:first <http://purl.org/co/item> ;
+	rdf:rest _:b9 .
+
+_:b9 rdf:first <http://purl.org/co/nextItem> ;
+	rdf:rest rdf:nil .
+
+_:b10 a owl:Class ;
+	owl:complementOf <http://purl.org/co/Item> .
+
+_:b11 a owl:Class ;
+	owl:intersectionOf _:b12 .
+
+_:b12 rdf:first <http://purl.org/co/ListItem> ;
+	rdf:rest _:b14 .
+
+_:b13 a owl:Restriction .
+
+_:b14 rdf:first _:b13 ;
+	rdf:rest rdf:nil .
+
+_:b15 a owl:Restriction ;
+	owl:onProperty <http://purl.org/co/element> ;
+	owl:allValuesFrom owl:Thing .
+
+_:b16 a owl:Restriction .
+
+_:b17 a owl:Restriction ;
+	owl:onProperty _:b18 ;
+	owl:someValuesFrom <http://purl.org/co/Bag> .
+
+_:b18 owl:inverseOf <http://purl.org/co/item> .
+
+_:b19 a owl:Restriction ;
+	owl:onProperty <http://purl.org/co/lastItem> ;
+	owl:maxCardinality 1 .
+
+_:b20 a owl:Restriction ;
+	owl:onProperty <http://purl.org/co/firstItem> ;
+	owl:maxCardinality 1 .
+
+_:b21 a owl:Class ;
+	owl:intersectionOf _:b22 .
+
+_:b22 rdf:first <http://purl.org/co/Bag> ;
+	rdf:rest _:b24 .
+
+_:b23 a owl:Restriction ;
+	owl:onProperty <http://purl.org/co/item> ;
+	owl:allValuesFrom <http://purl.org/co/ListItem> .
+
+_:b24 rdf:first _:b23 ;
+	rdf:rest rdf:nil .
+
+_:b25 a owl:Restriction .
+
+_:b26 a owl:Class ;
+	owl:intersectionOf _:b33 ;
+	rdfs:subClassOf _:b27 .
+
+_:b27 a owl:Class ;
+	owl:intersectionOf _:b28 .
+
+_:b28 rdf:first <http://purl.org/co/List> ;
+	rdf:rest _:b30 .
+
+_:b29 a owl:Restriction ;
+	owl:onProperty <http://purl.org/co/firstItem> ;
+	owl:someValuesFrom <http://purl.org/co/Item> .
+
+_:b30 rdf:first _:b29 ;
+	rdf:rest _:b32 .
+
+_:b31 a owl:Restriction ;
+	owl:onProperty <http://purl.org/co/lastItem> ;
+	owl:someValuesFrom <http://purl.org/co/Item> .
+
+_:b32 rdf:first _:b31 ;
+	rdf:rest rdf:nil .
+
+_:b33 rdf:first <http://purl.org/co/List> ;
+	rdf:rest _:b35 .
+
+_:b34 a owl:Restriction ;
+	owl:onProperty <http://purl.org/co/item> ;
+	owl:someValuesFrom <http://purl.org/co/ListItem> .
+
+_:b35 rdf:first _:b34 ;
+	rdf:rest rdf:nil .
+
+_:bnode_b0d3240e_519a_47b8_a7db_4117b133c4e6_1 a <tag:stardog:api:rule:SPARQLRule> ;
+	<tag:stardog:api:rule:content> """
+    PREFIX co: <http://purl.org/co/>
+    PREFIX swrlb: <http://www.w3.org/2003/11/swrlb#>
+      IF {
+
+		?l co:itemOf ?li1 .
+		?li1 co:index ?r1 .
+		?l co:itemOf ?li2 .
+		?li2 co:index ?r2 .
+		FILTER(?r2 = ?r1 + 1)
+          }
+      THEN {
+	?li1 co:nextItem ?li2
+          }""" .
+
+_:bnode_b0d3240e_519a_47b8_a7db_4117b133c4e6_2 a <tag:stardog:api:rule:SPARQLRule> ;
+	<tag:stardog:api:rule:content> """
+
+        PREFIX co: <http://purl.org/co/>
+      
+        IF {
+		?l co:lastItem ?i ;
+		   co:size ?value .
+        }
+        THEN {
+		?i co:index ?value .
+        }""" .
+
+_:bnode_b0d3240e_519a_47b8_a7db_4117b133c4e6_3 a <tag:stardog:api:rule:SPARQLRule> ;
+	<tag:stardog:api:rule:content> """
+
+    PREFIX co: <http://purl.org/co/>
+
+      IF {
+	?i co:itemOf ?l .
+	?l co:size ?value .
+	?i co:index ?value .
+          }
+      THEN {
+	?i co:lastItem ?l .
+          }""" .
+
+_:bnode_b0d3240e_519a_47b8_a7db_4117b133c4e6_4 a <tag:stardog:api:rule:SPARQLRule> ;
+	<tag:stardog:api:rule:content> """
+    PREFIX co: <http://purl.org/co/>
+      IF {
+	?list co:lastItem ?last .
+        ?last co:index ?r .
+          }
+      THEN {
+	?list co:size ?r .
+          }""" .
+
+_:bnode_b0d3240e_519a_47b8_a7db_4117b133c4e6_5 a <tag:stardog:api:rule:SPARQLRule> ;
+	<tag:stardog:api:rule:content> """
+    PREFIX co: <http://purl.org/co/>
+      IF {
+	?li co:index 1 ;
+	    co:itemOf ?l .
+          }
+      THEN {
+	?l co:firstItem ?li .
+          }""" .
